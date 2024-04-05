@@ -36,7 +36,6 @@ export function Recomendacao() {
 
         <View style={styles.content}>
           <Text style={styles.title}>Sua recomendação de filme:</Text>
-          <Text style={styles.recommendation}>Assista ao filme "O Poderoso Chefão", dirigido por Francis Ford Coppola, um clássico do cinema!</Text>
         </View>
       </ScrollView>
     </View>
@@ -103,12 +102,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 14,
-  },
-  recommendation: {
-    fontSize: 16,
-    textAlign: 'center',
-    marginTop: 10,
-    color: '#333',
   },
   containerScroll: {
     width: '90%',

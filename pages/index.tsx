@@ -1,9 +1,62 @@
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Platform, StatusBar, ScrollView } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons'
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Platform, StatusBar, ScrollView, ActivityIndicator, Alert, Keyboard } from 'react-native'; import { MaterialIcons } from '@expo/vector-icons'
 const alturaStatusBar = StatusBar.currentHeight
+import { useState } from "react";
+const KEY_GPT = 'your key';
 
 export function Home() {
 
+  const [load, defLoad] = useState(false);
+  const [receita, defReceita] = useState("");
+  const [ingr1, defIngr1] = useState("");
+  const [ingr2, defIngr2] = useState("");
+  const [ingr3, defIngr3] = useState("");
+  const [ingr4, defIngr4] = useState("");
+  const [ocasiao, defOcasiao] = useState("");
+
+
+
+  async function gerarReceita() {
+    if (ingr1 === "" || ingr2 === "" || ingr3 === "" || ingr4 === "" || ocasiao === "") {
+      Alert.alert("Atenção", "Informe todos os ingredientes!", [{ text: "Beleza!" }])
+      return;
+    }
+    defReceita("");
+    defLoad(true);
+    Keyboard.dismiss();
+
+    const prompt = `Sugira uma receita detalhada para o ${ocasiao} usando os ingredientes: ${ingr1}, ${ingr2}, ${ingr3} e ${ingr4} e pesquise a receita no YouTube. Caso encontre, informe o link.`;
+
+    fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${KEY_GPT}`,
+      },
+      body: JSON.stringify({
+        model: "gpt-3.5-turbo",
+        messages: [
+          {
+            role: "user",
+            content: prompt,
+          },
+        ],
+        temperature: 0.2,
+        max_tokens: 500,
+        top_p: 1,
+      })
+    })
+      .then(response => response.json())
+      .then((data) => {
+        console.log(data.choices[0].message.content);
+        defReceita(data.choices[0].message.content)
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+      .finally(() => {
+        defLoad(false);
+      })
+  }
 
   return (
     <View style={ESTILOS.container}>
@@ -14,38 +67,57 @@ export function Home() {
         <TextInput
           placeholder="Ingrediente 1"
           style={ESTILOS.input}
+          value={ingr1}
+          onChangeText={(texto) => defIngr1(texto)}
         />
         <TextInput
           placeholder="Ingrediente 2"
           style={ESTILOS.input}
+          value={ingr2}
+          onChangeText={(texto) => defIngr2(texto)}
         />
         <TextInput
           placeholder="Ingrediente 3"
           style={ESTILOS.input}
+          value={ingr3}
+          onChangeText={(texto) => defIngr3(texto)}
         />
         <TextInput
           placeholder="Ingrediente 4"
           style={ESTILOS.input}
+          value={ingr4}
+          onChangeText={(texto) => defIngr4(texto)}
         />
         <TextInput
-          placeholder="Almoço ou jantar"
+          placeholder="Almoço ou Jantar"
           style={ESTILOS.input}
+          value={ocasiao}
+          onChangeText={(texto) => defOcasiao(texto)}
         />
       </View>
-      <TouchableOpacity style={ESTILOS.button}>
+      <TouchableOpacity style={ESTILOS.button} onPress={gerarReceita}>
         <Text style={ESTILOS.buttonText}>Gerar receita</Text>
         <MaterialIcons name="travel-explore" size={24} color="#FFF" />
       </TouchableOpacity>
 
-      <ScrollView style={ESTILOS.containerScroll} showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 24, marginTop: 4, }}>
+      <ScrollView
+        contentContainerStyle={{ paddingBottom: 24, marginTop: 4 }}
+        style={ESTILOS.containerScroll}
+        showsVerticalScrollIndicator={false}>
 
-        <View style={ESTILOS.content}>
-          <Text style={ESTILOS.title}>Produzindo receita...</Text>
-        </View>
+        {load && (
+          <View style={ESTILOS.content}>
+            <Text style={ESTILOS.title}>Produzindo receita...</Text>
+            <ActivityIndicator color="#000" size="large" />
+          </View>
+        )}
 
-        <View style={ESTILOS.content}>
-          <Text style={ESTILOS.title}>Sua receita 👇</Text>
-        </View>
+        {receita && (
+          <View style={ESTILOS.content}>
+            <Text style={ESTILOS.title}>Sua receita 👇</Text>
+            <Text style={{ lineHeight: 24 }}>{receita} </Text>
+          </View>
+        )}
 
       </ScrollView>
 

@@ -36,7 +36,6 @@ export function Lazer() {
 
         <View style={styles.content}>
           <Text style={styles.title}>Sua recomendação de lazer:</Text>
-          <Text style={styles.recommendation}>Visite o parque local para desfrutar de uma caminhada relaxante ao ar livre!</Text>
         </View>
       </ScrollView>
     </View>
@@ -103,12 +102,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 14,
-  },
-  recommendation: {
-    fontSize: 16,
-    textAlign: 'center',
-    marginTop: 10,
-    color: '#333',
   },
   containerScroll: {
     width: '90%',

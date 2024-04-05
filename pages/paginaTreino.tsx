@@ -36,9 +36,6 @@ export function Treino() {
 
         <View style={styles.content}>
           <Text style={styles.title}>Seu planejamento de treino:</Text>
-          <Text style={styles.recommendation}>Segunda-feira: Corrida leve por 30 minutos</Text>
-          <Text style={styles.recommendation}>Quarta-feira: Treino de musculação (peito e tríceps)</Text>
-          <Text style={styles.recommendation}>Sexta-feira: Sessão de yoga para relaxamento e flexibilidade</Text>
         </View>
       </ScrollView>
     </View>
@@ -106,12 +103,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 14,
   },
-  recommendation: {
-    fontSize: 16,
-    textAlign: 'center',
-    marginTop: 10,
-    color: '#333',
-  },
+  // recommendation: {
+  //   fontSize: 16,
+  //   textAlign: 'center',
+  //   marginTop: 10,
+  //   color: '#333',
+  // },
   containerScroll: {
     width: '90%',
     marginTop: 8,
